@@ -187,7 +187,7 @@ filter(police, contraband_found)
 ```
 
 
-### EXERCISE
+### EXERCISE 3: subsetting with filter() function
 
 Use `filter()` to choose the rows where subject_race is "white".  
 
