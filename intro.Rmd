@@ -65,19 +65,24 @@ police <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/d
                    col_types=c("location"="c"))
 ```
 
-### EXERCISE
+### EXERCISE 1: reading in and formatting data
 
 Remember: you need to have loaded tidyverse, so execute the cells above.
 
 We have a dataset that includes [ISO two-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).  The country code for Namibia is NA, so we don't want to read "NA" in as missing, which it does by default (see how "NA" is grayed out in the output below for the Namibia country code?).
 
-Look at the documentation (help) page for `read_csv`.  You can open it by typing `?read_csv` in the console.  The `na` argument determines what values are imported as missing `NA`.  
-
-Change the code below so that **only** empty strings "" and "N/A" values are imported as missing (not "NA").  Look at `fix_data` after importing so you can check the values.
-
 ```{r, eval=TRUE}
 fix_data <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/data/missing.csv")
 fix_data
+```
+
+Look at the documentation (help) page for `read_csv`.  You can open it by typing `?read_csv` in the console.  The `na` argument determines what values are imported as missing `NA`.  
+
+Read the data in as `fixed_data` so that **only** empty strings "" and "N/A" values are imported as missing (not "NA").  Look at `fixed_data` after importing so you can check the values.
+
+
+```{r}
+
 ```
 
 
