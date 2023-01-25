@@ -153,7 +153,7 @@ select(police, 1, 4, 10)
 
 Yes, there are other ways to specify which columns you want.  We'll cover those next session.  
 
-### EXERCISE
+### EXERCISE 2: subsetting with select() function
 
 Remember: you need to have loaded tidyverse, and the police data, so execute the cells above.
 
@@ -163,7 +163,7 @@ Convert this base R expression: `police[,c("violation", "citation_issued", "warn
 
 ```
 
-
+Hint: The base R expression above keeps all rows but selects only the three columns named within c().
 
 ## filter
 
