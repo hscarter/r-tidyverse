@@ -281,7 +281,7 @@ is.na(police$beat) %>% sum()
 ```
 
 
-### EXERCISE
+### EXERCISE 4a: combine select() and filter() to subset data
 
 Select the date, time, and outcome (columns) of stops that occur in beat "71" (rows).  Make use of the `%>%` operator.  
 
@@ -306,7 +306,7 @@ police60201 <- police %>%
 
 
 
-### EXERCISE
+### EXERCISE 4b
 
 Select only vehicle_year and vehicle_make columns for observations where there were contraband_weapons
 
