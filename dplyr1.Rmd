@@ -15,8 +15,6 @@ editor_options:
 knitr::opts_chunk$set(eval=FALSE)  # when making the html version of this file, don't execute the code
 ```
 
-*The output of most of the R chunks isn't included in the HTML version of the file to keep it to a more reasonable file size.  You can run the code in R to see the output.*
-
 This is an [R Markdown](https://rmarkdown.rstudio.com/) document.  Follow the link to learn more about R Markdown and the notebook format used during the workshop.
 
 # Setup
@@ -38,7 +36,9 @@ police <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/d
 
 dplyr is at the core of the tidyverse.  It is for working with data frames.  It contains six main functions, each a verb, of actions you frequently take with a data frame.  We're covering 3 of those functions today (select, filter, mutate), and 3 more next session (group_by, summarize, arrange).
 
-Each of these functions takes a data frame as the first input.  Within the function call, we can refer to the column names without quotes and without $ notation.
+If you have a background in Excel, you probably will start thinking about equivalences in your mind. That's great! If you have worked on base R (not tidyverse), don't overthink it. What's the most important thing to keep in mind right now? Each of these functions takes a data frame as the first input.  Within the function call, we can refer to the column names without quotes and without $ notation. 
+
+We will begin with the `select` for choosing columns, and `filter` for choosing rows. Remember `select` is for columns, while `filter` is for rows. Let's start!
 
 # Select: Choose Columns
 
@@ -46,13 +46,13 @@ The previous session covered the basics of `select` but there are many more opti
 
 First, let's remember what the column names are:
 
-```{r}
+```{r, eval=TRUE}
 names(police)
 ```
 
-Recall, the `select` function takes as the first input a data frame, and then we can list one or more columns, names unquoted, that we want to select.  The columns will be ordered in the order we specify them.
+Recall, the `select` function takes as the first input a data frame, and then we can list one or more columns, names unquoted, that we want to select. The columns will be ordered in the order we specify them. Notice that the order in the output is different than the original order above.
 
-```{r}
+```{r, eval=TRUE}
 select(police, outcome, date)
 ```
 
@@ -63,51 +63,68 @@ There are a number of select helper functions and special syntax options that al
 
 First, we can use : for range, but with names in addition to numbers:
 
-```{r}
+```{r, eval=TRUE}
 select(police, raw_DriverRace:raw_ResultOfStop)
 ```
 
-We can select the rightmost columns with `last_col()`:
+The result is the same if we use numbers.
 
-```{r}
+```{r, eval=TRUE}
+select(police, 26:29)
+```
+
+We can select the rightmost columns with `last_col()`. You can check about with `names` that it is the "last" column in our dataset.
+
+```{r, eval=TRUE}
 select(police, last_col())
 ```
 
 Last 4 columns (the input to the function is the offset # of columns from the right edge):
 
-```{r}
+```{r, , eval=TRUE}
 select(police, last_col(0:3))
+```
+
+You can think `everything()` as the opposite of selecting one or a few columns. But it is most useful when combined with other functions. After all, we use select because you don't want the whole database but part of it! We will see the use of `everything()` and other selection operators below.  
+
+```{r, eval=TRUE}
+select(police, everything())
 ```
 
 
 ## Excluding columns
 
-We can also say which columns we don't want by putting a `-` in front of the name:
+We can also say which columns we don't want by putting a `-` (minus) in front of the name. Think about it as subtracting or or more columns. The idea of subtracting makes a lot of sense -- we have now 27 rather than the original 29 columns in the data. 
 
-```{r}
+```{r, eval=TRUE}
 select(police, -raw_row_number, -subject_age)
 ```
 
-When using negated `-` column names, if we start with negations, it will include all other columns, even if we try to specify some:
+When using negated `-` column names, if we start with negations, it will get messy. Make sure to *avoid* the following code:
 
-```{r}
-select(police, -raw_row_number, -subject_age, time:outcome)
+```{r, eval=TRUE}
+select(police, -raw_row_number, -subject_age, time:outcome) 
 ```
 
 To both specify the columns wanted and exclude some that would otherwise be selected, the exclusions need to come at the end:
 
-```{r}
-select(police, location:type, -department_id)
+```{r, eval=TRUE}
+select(police, time:outcome, -subject_age) 
 ```
 
+We don't need to include -raw_row_number -- it is not part of the range between time and outcome. If we do include it, we will still get the same result.  
+
+```{r, eval=TRUE}
+select(police, time:outcome, -subject_age, -raw_row_number) 
+```
 
 ## Reordering and renaming
 
 We've already seen that columns will appear in the result in the order that we list the names.  
 
-The `everything()` helper function can be useful if you want to pull a few columns over to the left so that they are the ones that show first when you look at the data:
+Do you remember the `everything()` helper function? It can be useful if you want to pull a few columns over to the left so that they are the ones that show first when you look at the data:
 
-```{r}
+```{r, eval=TRUE}
 select(police, outcome, everything())
 ```
 
@@ -115,26 +132,30 @@ Each column only gets included once, in the position that it first appears.  So 
 
 We can also rename columns while using `select()`.  The syntax is `new_name = old_name`.
 
-```{r}
+```{r, eval=TRUE}
 select(police, raw_id=raw_row_number, date, time)
 ```
 
-
 or we can use `rename()` to only rename, without affecting which columns are included or their order (all of the columns are kept in the same order):
 
-```{r}
+```{r, reval=TRUE}
 rename(police, raw_id=raw_row_number)
 ```
 
-Remember, this doesn't change police because we didn't save the result.  So far, we've just been printing the copy of the data frame that is returned by the function.  If we want to change our data frame, we'd need to save the result back to the `police` object.
+Remember, this doesn't change police because we didn't save the result.  So far, we've just been printing the copy of the data frame that is returned by the function.  If we want to change our data frame, we'd need to save the result back to the `police` object.We can also save the changes in another object with a different name such as `police_new`.
 
-```{r}
-police <- rename(police, raw_id=raw_row_number)
+```{r, eval=TRUE}
+police_new <- rename(police, raw_id=raw_row_number)
+```
+
+We saved the same data with a different name for one column, while keep all other and their original order. But we can also save only a few variables. For convenience, we  name `police_short` our new object.
+
+```{r, eval=TRUE}
+police_short<- select(police, raw_row_number, date, time)
 ```
 
 
-
-### EXERCISE
+### EXERCISE 3
 
 Remember: run the cells above to load tidyverse and import the data.
 
@@ -143,7 +164,10 @@ Using `select` and/or `rename` as needed:
 - Rename subject_age to age, subject_race to race, and subject_sex to sex, but keep the columns in their original order
 - Exclude the department_id and department_name columns
 
-Hint: remember that you can chain dplyr commands together with `%>%`.
+Hint: 
+
+- Remember that you can chain dplyr commands together with `%>%`.*
+- You don't need to save the results. If you save the changes, use a different name such as *police_something*.
 
 
 ```{r}
@@ -157,49 +181,50 @@ Hint: remember that you can chain dplyr commands together with `%>%`.
 
 We can also select by matching patterns in the names of the columns.  The patterns to match are in quotes because they aren't column names -- just character data.
 
-```{r}
+```{r, eval=TRUE}
 select(police, starts_with("contraband"))
 ```
 
-```{r}
+```{r, eval=TRUE}
 select(police, ends_with("issued"))
 ```
 
-```{r}
+```{r, eval=TRUE}
 select(police, contains("vehicle"))
 ```
 
 We can also put a `-` in front of these helper functions to exclude columns:
 
-```{r}
+```{r, eval=TRUE}
 select(police, -contains("subject"))
 ```
 
 
-And there are even more [select helper functions](https://tidyselect.r-lib.org/reference/select_helpers.html).  
+And there are even more [select helper functions](https://tidyselect.r-lib.org/reference/language.html).  
 
-### EXERCISE
+### EXERCISE 4
 
 Use `select()` to get a copy of `police` without the columns that start with "raw".
 
-```{r}
+Hint: If you mess up your `police` dataset, re-run the cell near the top of the file under the Data header and read the data in again fresh.
+
+
+```{r, }
 
 ```
-
-Hint: If you mess up your `police` dataset, re-run the cell near the top of the file under the Data header and read the data in again fresh.
 
 
 ## Selecting with Vectors or Functions
 
 What if we have the names of the columns we want to select in a vector already?  For example:
 
-```{r}
+```{r, eval=TRUE}
 analysis_vars <- c("search_basis", "reason_for_stop")
 ```
 
 Perhaps we built this vector programatically (we wrote code to determine the values, instead of typing them ourselves), so we can't just rewrite it to: 
 
-```{r}
+```{r, eval=TRUE}
 select(police, search_basis, reason_for_stop)
 ```
 
@@ -211,7 +236,7 @@ select(police, analysis_vars)
 
 This warning tells us what we should do instead, which is use `all_of`:
 
-```{r}
+```{r, , eval=TRUE}
 select(police, all_of(analysis_vars))
 ```
 
@@ -219,7 +244,7 @@ This makes it clearer that "analysis_vars" isn't the name of a column in police.
 
 What if we want to select columns of a certain type -- for example, only the numeric columns?  
 
-```{r}
+```{r, eval=TRUE}
 select(police, where(is.numeric))
 ```
 
@@ -232,27 +257,27 @@ select(police, where(is.numeric))
 
 The `filter()` function lets us choose which rows of data to keep by writing expressions that return TRUE or FALSE for every row in the data frame.  Recall from last session:
 
-```{r}
+```{r, eval=TRUE}
 filter(police, date == "2017-01-02")
 ```
 
 We can do complex conditions as we could do with `[]`
 
-```{r}
+```{r, eval=TRUE}
 filter(police, subject_race == "hispanic" & subject_sex == "female")
 ```
 
-If we include multiple comma-separated conditions, they are joined with `&` and.  So this following is equivalent to the above.
+If we include multiple comma-separated conditions, they are joined with `&` (and).  So this following is equivalent to the above.
 
-```{r}
+```{r, eval=TRUE}
 filter(police, subject_race == "hispanic", subject_sex == "female")
 ```
 
 
-### EXERCISE
+### EXERCISE 5
 
 1. Filter `police` to choose the rows where location is 60201 or 60202
-2. Filter `police` to choose the rows where location is 60201 or 60202 and subject_sex is "male"
+2. Filter `police` to choose the rows where location is 60201 or 60202, and subject_sex is "male"
 
 Hints:
 
@@ -264,7 +289,7 @@ Hints:
 
 ## Including Variable Transformations
 
-When filtering, we can include transformations of variables in our expressions.  To see this, we'll use the built-in `mtcars` dataset, which, unlike the `police` data, has some numeric variables.
+When filtering, we can include transformations of variables in our expressions.  To see this, we'll use the built-in `mtcars` dataset.
 
 Here's what `mtcars` looks like:
 
@@ -274,18 +299,18 @@ mtcars
 
 Now, let's filter to see which cars have above average mpg:
 
-```{r}
+```{r, eval=TRUE}
 filter(mtcars, mpg > mean(mpg))
 ```
 
 Or which car has the most horsepower (hp):
 
-```{r}
+```{r,  eval=TRUE}
 filter(mtcars, hp == max(hp))
 ```
 
 
-### EXERCISE
+### EXERCISE 6
 
 Using `mtcars`, find the car with the minimum (`min`) displacement (disp) value:
 
@@ -298,13 +323,13 @@ Using `mtcars`, find the car with the minimum (`min`) displacement (disp) value:
 
 Last session, we saw `slice()` briefly as a way to choose which rows we want by their integer index value.  But, there are some useful variants on the `slice` function that help us select rows that have the maximum or minimum value of a particular variable:
 
-```{r}
+```{r, eval=TRUE}
 slice_max(mtcars, hp)
 ```
 
 By default it just gives us one row, but we can ask for more than one by setting the `n` argument:
 
-```{r}
+```{r, eval=TRUE}
 slice_max(mtcars, hp, n=3)
 ```
 
@@ -312,25 +337,26 @@ We got 4 rows above because there was a tie at position 3.  There's an option `w
 
 There's also a minimum version:
 
-```{r}
+```{r, eval=TRUE}
 slice_min(mtcars, disp)
 ```
 
+Like we did with `slice_max`, can also specify the `n` argument.
 
 # Mutate: Change or Create Columns
 
 `mutate()` is used to both change the values of an existing column and make a new column.  
 
-We name the column we're mutating and set the value.  If the name already exists, it will update the column.  If the name doesn't exist, it will create a new variable (column is appended at the end of existing columns).  
+We name the column we're mutating and set the value.  If the name already exists, it will update the column. If the name doesn't exist, it will create a new variable (column is appended at the end of existing columns).  
 
-```{r}
+```{r, eval=TRUE}
 mutate(police, vehicle_age = 2017 - vehicle_year) %>%
   select(starts_with("vehicle"))  # just to pick a few columns to look at
 ```
 
 We can put multiple mutations in the same call to mutate, with the expressions separated by commas:
 
-```{r}
+```{r,  eval=TRUE}
 mutate(police, 
        vehicle_age = 2017 - vehicle_year,
        old_car = vehicle_year < 2000)
@@ -339,7 +365,7 @@ mutate(police,
 
 Within a call to mutate, we can refer to variables we made or changed earlier in the same call as well.  Here, we create vehicle_age, and then use it to create vehicle_age_norm:
 
-```{r}
+```{r, eval=TRUE}
 police %>% 
   mutate(vehicle_age = 2017 - vehicle_year, 
          vehicle_age_norm = ifelse(vehicle_age < 0,  # ifelse test condition
@@ -351,13 +377,13 @@ police %>%
   filter(vehicle_age < 0)
 ```
 
-Side note: there is a tidyverse version of `ifelse()` called `if_else()` that works generally the same except it is stricter about checking data types.
+Side note: there is a tidyverse version of `ifelse()` called `if_else()` -- with the underscore or low dash symbol -- that works generally the same except it is stricter about checking data types.
 
 `mutate()` can also change an existing column.  The location column in the data contains zip codes, that were read in as numeric values.  This means the leading zero on some zip codes has been lost.  Convert location to character data, and add back in the leading 0 if it should be there.
 
 Here I'll change the location column twice in the same call with two different transformations:
 
-```{r}
+```{r, eval=TRUE}
 police %>%
   mutate(location = as.character(location),  # first convert to character, then recode below
          location = ifelse(nchar(location) == 4,  # ifelse test (vector of TRUE and FALSE)
@@ -378,17 +404,14 @@ mutate(police, vehicle_make = na_if(vehicle_make, "UNK"))
 `na_if()` can only can check and replace one value at a time; it also can't be used with any expressions (`x <= 1`) -- only single values.
 
 
-### EXERCISE
+### EXERCISE 7
 
-If beat is "/" or "CHICAGO", set it to `NA` instead using `mutate()`.  
+If the column beat in `police` is "/" or "CHICAGO", set it to `NA` instead using `mutate()`.  
 
 Hint: it's ok if you take two steps to do this.    
 
 ```{r}
-
 ```
-
-
 
 
 
