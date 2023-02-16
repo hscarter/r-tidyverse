@@ -31,7 +31,7 @@ For this session, we're learning three additional dplyr functions: group_by, sum
 
 ## Data
 
-We're using the same data as sessions 1 and 2. The same data.  
+We're using the same data as sessions 1 and 2.
 
 ```{r, eval=TRUE}
 police <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/data/ev_police.csv",
