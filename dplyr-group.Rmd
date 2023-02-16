@@ -79,9 +79,7 @@ We get one column per summary variable we create.  Once we group below, we'll se
 Use summarize to compute the `min()` and `max()` `vehicle_year`
 
 ```{r}
-police %>%
-  summarize(min(vehicle_year),
-            max(vehicle_year)) 
+
 ```
 
 
