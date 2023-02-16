@@ -31,7 +31,7 @@ For this session, we're learning three additional dplyr functions: group_by, sum
 
 ## Data
 
-We're using the same data as session 1.  
+We're using the same data as sessions 1 and 2.
 
 ```{r, eval=TRUE}
 police <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/data/ev_police.csv",
@@ -74,12 +74,14 @@ police %>%
 We get one column per summary variable we create.  Once we group below, we'll see why we get the output in columns instead of rows.
 
 
-### EXERCISE
+### EXERCISE 1
 
 Use summarize to compute the `min()` and `max()` `vehicle_year`
 
 ```{r}
-
+police %>%
+  summarize(min(vehicle_year),
+            max(vehicle_year)) 
 ```
 
 
@@ -101,6 +103,7 @@ If you wanted to select columns using their names, put them in a vector (so it's
 ```{r}
 police %>%
   summarize(across(c(date, time, location, beat, subject_age), n_distinct))
+
 ```
 
 
@@ -109,7 +112,9 @@ If we want to apply multiple functions:
 ```{r}
 police %>%
   summarize(across(!where(is.character), ## select columns that are not of type character
-                   list(min, max)))   # take the min and max of each column
+                   list(min, max)))# take the min and max of each column
+
+
 ```
 
 To fix the names in the output, explicitly name our summary functions in the list:
@@ -118,14 +123,15 @@ To fix the names in the output, explicitly name our summary functions in the lis
 police %>%
   summarize(across(!where(is.character), ## select columns that are not of type character
                    list(min_val=min, max_val=max)))   # take the min and max of each column
+
 ```
 
 There are other options for output naming patterns available too.
 
 
-### EXERCISE
+### EXERCISE 2
 
-What if we want to do something to each column that is more complicated than a single function?  For example, counting missing values, which you do with `sum(is.na(x))`.  You can write your own function!
+What if we want to do something to each column that is more complicated than a single function?  For example, counting missing values, which you do with `sum(is.na(x))`.  You can write your own function! You can read more about functions [here](https://r4ds.had.co.nz/functions.html) 
 
 ```{r, eval=TRUE}
 na_count <- function(x) {
@@ -134,6 +140,7 @@ na_count <- function(x) {
 
 # Example for a single vector:
 na_count(police$subject_age)
+
 ```
 
 Now use this new `na_count()` function to count the missing values in each column:
@@ -147,7 +154,7 @@ police %>%
 This is similar to using the apply() function in base R:
 
 ```{r}
-apply(police, 2, na_count)
+apply(police, 2, na_count) 
 ```
 
 #### Advanced Aside
@@ -157,7 +164,7 @@ Instead of creating the function ahead of time, we could define it as part of th
 ```{r}
 police %>%
   summarize(across(everything(),
-                   ~sum(is.na(.x))))  # define a function here that operates on each column
+                   ~sum(is.na(.x)) ))  # define a function here that operates on each column
 ```
 
 This is an advanced technique outside of the scope of this workshop.  But if you see a ~ inside `across()`, at least know that someone is defining their own function inline.  
@@ -213,8 +220,9 @@ We can group by multiple columns, and we'll get all of the combinations of value
 police %>% 
   group_by(subject_sex, subject_race) %>%
   summarize(mean_vehicle_age = mean(vehicle_age),
-            sd_vehicle_age = sd(vehicle_age))
+            sd_vehicle_age = sd(vehicle_age)) 
 ```
+We are getting that warning because it is telling us that all the analysis that comes next or subsequent operation will still be grouping. You can group or ungroup.
 
 Let's compute the ratio of warnings to citations by subject_race - note that we can use the variables we create in later expressions within the same call to `summarize()`:
 
@@ -226,13 +234,14 @@ police %>%
             ratio = warnings/citations)
 ```
 
-There's considerable variation here, from 1.1 warnings for every citation given to 2.2 warnings for every citation given.
+There's considerable variation here, from 1.1 warnings for every citation given to 2.2 warnings for every citation given. So, relative more warnings to citations for black drivers than hispanic ones.
 
-### EXERCISE
+### EXERCISE 3
 
 Compute the `min()` and `max()` `vehicle_year` for each `vehicle_make`.
 
 ```{r}
+
 
 ```
 
@@ -244,7 +253,7 @@ Compute the `min()` and `max()` `vehicle_year` for each `vehicle_make`.
 If you ever have a grouped data frame, you may need to ungroup it to get rid of the groups.  To do so, use `ungroup()`:
 
 ```{r}
-poilce %>% 
+police %>% 
   group_by(outcome) %>%
   ungroup()
 ```
@@ -270,8 +279,6 @@ police %>%
   slice(1) %>%
   ungroup()
 ```
-
-
 
 
 # Arrange
@@ -305,7 +312,7 @@ police %>%
 ```
 
 
-### EXERCISE
+### EXERCISE 4
 
 Sort the data by `vehicle_make` and then `vehicle_year`.
 
@@ -318,7 +325,7 @@ Sort the data by `vehicle_make` and then `vehicle_year`.
 
 A bonus function that I use frequently: `count()`.  It's how you'd get output similar to `table()`
 
-By itself, it counts the number of rows:
+By itself, it counts the number of rows ("n" by default):
 
 ```{r}
 police %>%
@@ -329,7 +336,9 @@ If you supply the name of a column, it makes a table:
 
 ```{r}
 police %>%
-  count(subject_sex)
+  count(subject_sex) 
+
+#table(police$subject_sex)
 ```
 
 This is the same result as if you grouped the data first:
@@ -344,15 +353,17 @@ You can group by multiple columns directly with count:
 
 ```{r}
 police %>%
-  count(subject_sex, subject_race)
+  count(subject_sex, subject_race) 
+#%>% arrange(n)
 ```
 
 
-### EXERCISE
+### EXERCISE 5
 
 How many times does each type of violation appear in the dataset?  Bonus: sort the results from most to least frequent.  You can do this with `arrange()` or look at the documentation for `count()` to find another option.
 
 ```{r}
+
 
 ```
 
