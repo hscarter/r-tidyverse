@@ -205,8 +205,8 @@ long_data <- pivot_longer(who2, -country:-year,
 ```{r, eval=FALSE}
 # spread it back out
 pivot_wider(long_data, 
-            names_from=diagnosis,
-            values_from=count)
+            names_from=diagnosis, #We will make columns from the distinct values of diagnosis. The old values in rows will become column names
+            values_from=count) #We will fill the columns with the values in column
 ```
 
 
