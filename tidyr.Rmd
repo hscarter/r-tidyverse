@@ -173,7 +173,8 @@ Ok, back to our WHO data.  One trick before we learn how to pivot wider to undo 
 We can tell pivot_longer to do this for us:
 
 ```{r, eval=FALSE}
-pivot_longer(who2, -country:-year,
+pivot_longer(who2, 
+             -country:-year,
              # we'll keep 3 columns: make up a name for each
              names_to=c("diagnosis", "gender", "age"),  
              # this is a regular expression that captures the pattern
