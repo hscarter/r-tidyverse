@@ -254,6 +254,7 @@ Hint: Make sure to run the code above for long_data
 
 ```{r}
 
+
 ```
 
 
@@ -322,6 +323,7 @@ addresses <- tribble(~name, ~location,
                      "Bob", "Bend, OR",
                      "Louka", "Honolulu, HI",
                      "Alex", "San Jose, CA")
+
 ```
 
 
@@ -360,6 +362,7 @@ separate_rows(survey,
   pivot_wider(names_from=q2,  # new column names, one for each value
               values_from=exists,  # so there will be a 1 where there was a value
               values_fill=0) ## fills in missing vals with 0 instead of NA
+
 ```
 
 ## Learning More
