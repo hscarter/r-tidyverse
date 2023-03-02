@@ -96,7 +96,7 @@ pivot_longer(foods,
 The `id` column has values duplicated, once for each of the original 3 columns that we collapsed, and each value of our new `category` column appears twice, because there were 2 rows in `food` when we started.
 
 
-### EXERCISE
+## EXERCISE
 
 Pivot the pops data frame below to be in a longer format, with rows for each country-year instead of each country.
 
@@ -239,7 +239,7 @@ long_data %>%
 ```
 
 
-### EXERCISE
+## EXERCISE
 
 Pivot the `long_data` data frame wider so that each row is a country-diagnosis-gender-age observation (pivot "year" so you have one column for each year in the output).
 
