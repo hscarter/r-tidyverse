@@ -37,46 +37,25 @@ library(tidyverse)
 ```
 
 
-# Data
+# Data Formats: Wide versus Long
 
-We're going to work with a dataset that's part of the tidyr package: `who`
+Today we will learn about two different data formats (or structures): wide and long. As in the previous sessions, we will provide code examples and exercises. But we want you first to understand very well the difference between these two ways of representing data. 
 
-The details: A subset of data from the World Health Organization Global Tuberculosis Report, and accompanying global populations.  The data uses the original codes given by the World Health Organization. The column names for columns 5 through 60 are made by combining "new_" to a code for method of diagnosis (rel = relapse, sn = negative pulmonary smear, sp = positive pulmonary smear, ep = extrapulmonary) to a code for gender (f = female, m = male) to a code for age group (014 = 0-14 yrs of age, 1524 = 15-24 years of age, 2534 = 25 to 34 years of age, 3544 = 35 to 44 years of age, 4554 = 45 to 54 years of age, 5564 = 55 to 64 years of age, 65 = 65 years of age or older).
+First, let´s check a very simple example in the following [statistics blog](https://www.statology.org/long-vs-wide-data/). What are the similarities and differences between both data frames?    
 
-Column names:
+There are situations where we might want each row to be a different unit of observation.  We could make a really wide data set (one with lots of columns), where each row is a single ID column such as teams or countries and there are columns for any other measure. Or we make a data set that´s really long, where we have fewer columns but each row is a combination of different values (i.e., country-year). It will be long because we will have a repetition of countries and years. Or we could make something in between. 
 
-```{r}
-names(who)
-```
+These different configurations support different types of statistical models, data transformations, and data visualizations.  No configuration is necessarily the right one or better than the others in a vacuum - it depends on what you want to do with the data! And we talk about wide and long in relative terms.
 
+# Pivot: from wide to long 
 
-Let's look at a few random rows:
+Today we want to show you how to transform a data frame from wide to long (and from long to wide). 
 
-```{r}
-sample_n(who, 10)
-```
-
-In this data set, each row (each observation) is a country-year.  Each column is a measure-age value.  
-
-There are situations though where we might want each row to be a different unit of observation.  We could make a really wide data set (one with lots of columns), where each row is a single country and there are columns for every measure in every year.  Or we could make a data set that's really long, where each row is a country-year-measure-age observation.  Or one that's in between, with each row being country-year-age, and there are columns for each measure.
-
-These different configurations support different types of statistical models, data transformations, and data visualizations.  No configuration is necessarily the right one or better than the others in a vacuum - it depends on what you want to do with the data!
-
-I'm going to reduce this dataset to just a few countries that have at least some data filled in to make it easier for us to work with:
-
-```{r}
-who2 <- filter(who, country %in% c("Canada", "Czech Republic", "Morocco"))
-```
-
-
-
-# Pivot Longer
-
-We make a data set longer by reducing the number of columns and increasing the number of rows.  We'll stack some of the columns on top of each other, and duplicate the values in other columns to make this happen.  This changes what the unit of observation is (what each row represents).
+To begin with, we make a data set longer by reducing the number of columns and increasing the number of rows.  We'll stack some of the columns on top of each other, and duplicate the values in other columns to make this happen.  This changes what the unit of observation is (what each row represents).
 
 ## A Mini Example
 
-Before we work with our larger data set, let's look at a very small one so it's easier to see what's happening.
+Before we work with a larger data set, let's look at a very small one so it's easier to see what's happening. 
 
 `tribble()` is a function that makes it easier to manually create a tibble (data frame)
 
@@ -127,6 +106,36 @@ pops <- tribble(~country,  ~year2011,  ~year2012,  ~year2013,
                 "Germany",  82892904,  82800121,  82726626,
                 "Kenya",    42027891,  43178141,  44353691)
 
+```
+
+
+# Data 
+
+Now, we're going to work with a dataset that's part of the tidyr package: `who`
+
+The details: A subset of data from the World Health Organization Global Tuberculosis Report, and accompanying global populations.  The data uses the original codes given by the World Health Organization. The column names for columns 5 through 60 are made by combining "new_" to a code for method of diagnosis (rel = relapse, sn = negative pulmonary smear, sp = positive pulmonary smear, ep = extrapulmonary) to a code for gender (f = female, m = male) to a code for age group (014 = 0-14 yrs of age, 1524 = 15-24 years of age, 2534 = 25 to 34 years of age, 3544 = 35 to 44 years of age, 4554 = 45 to 54 years of age, 5564 = 55 to 64 years of age, 65 = 65 years of age or older).
+
+Column names:
+
+```{r}
+names(who)
+```
+
+
+Let's look at a few random rows:
+
+```{r}
+sample_n(who, 10)
+```
+
+In this data set, each row (each observation) is a country-year.  Each column is a measure-age value.  
+
+There are situations though where we might want each row to be a different unit of observation.  We could make a really wide data set (one with lots of columns), where each row is a single country and there are columns for every measure in every year.  Or we could make a data set that's really long, where each row is a country-year-measure-age observation.  Or one that's in between, with each row being country-year-age, and there are columns for each measure.
+
+I'm going to reduce this dataset to just a few countries that have at least some data filled in to make it easier for us to work with:
+
+```{r}
+who2 <- filter(who, country %in% c("Canada", "Czech Republic", "Morocco"))
 ```
 
 
