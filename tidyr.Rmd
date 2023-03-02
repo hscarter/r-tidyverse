@@ -197,6 +197,9 @@ long_data <- pivot_longer(who2, -country:-year,
              names_to=c("diagnosis", "gender", "age"), 
              values_to="count",
              names_pattern = "new_?(.+)_([mf])(\\d+)") 
+
+#We can check different options in the help
+
 ```
 
 ```{r, eval=FALSE}
