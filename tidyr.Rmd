@@ -182,6 +182,8 @@ pivot_longer(who2,
              # we are dropping "new"
              names_pattern = "new_?(.+)_([mf])(\\d+)",
              values_to="count")  
+
+#We can check different options in the help
 ```
 
 If the variable names had a simpler pattern, for example: year_measure, then we could use the "names_sep" argument instead of the more complicated "names_pattern" to split up the column.
@@ -197,8 +199,6 @@ long_data <- pivot_longer(who2, -country:-year,
              names_to=c("diagnosis", "gender", "age"), 
              values_to="count",
              names_pattern = "new_?(.+)_([mf])(\\d+)") 
-
-#We can check different options in the help
 
 ```
 
