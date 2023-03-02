@@ -140,7 +140,7 @@ who2 <- filter(who, country %in% c("Canada", "Czech Republic", "Morocco"))
 ```
 
 
-## WHO data
+## WHO2 data
 
 Now, the WHO TB data is a bit more complicated than the simple example.  We know how to take the data set into completely long format, by collapsing all of the columns except the first 4 that have country name info and year:
 
