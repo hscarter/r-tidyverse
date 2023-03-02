@@ -229,7 +229,9 @@ long_data %>%
   sample_n(20) %>%
   arrange(country, year, diagnosis, age, gender) %>%
   pivot_wider(names_from=diagnosis, 
-              values_from=count)
+              values_from=count,
+              #values_fill=NA
+              ) #We can fill NA with something else such as 0 
 ```
 
 We could also pivot wider more than one column at once.  Let's have one row per country-year-diagnosis, and one column for each age-gender combination:
@@ -239,14 +241,16 @@ long_data %>%
   pivot_wider(names_from=c(age, gender),
               # controls how new variable names are created
               # uses syntax from the glue package
-              names_glue="{gender}_{age}", 
-              values_from=count)
+              names_glue="{gender}_{age}", #We can get different combinations. "{gender}.{age} or something different such as age first"
+              values_from=count) #We can go as wide as we want! We just need to change names_from and names_glue 
 ```
 
 
 ## EXERCISE
 
 Pivot the `long_data` data frame wider so that each row is a country-diagnosis-gender-age observation (pivot "year" so you have one column for each year in the output).
+
+Hint: Make sure to run the code above for long_data
 
 ```{r}
 
