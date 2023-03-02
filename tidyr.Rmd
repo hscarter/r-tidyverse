@@ -60,6 +60,7 @@ Before we work with a larger data set, let's look at a very small one so it's ea
 `tribble()` is a function that makes it easier to manually create a tibble (data frame)
 
 ```{r}
+
 foods <- tribble(~id, ~a, ~b, ~c,
                  1, "apple", "banana", "cod", 
                  2, "asparagus", "bacon", "chocolate")
@@ -125,7 +126,7 @@ names(who)
 Let's look at a few random rows:
 
 ```{r}
-sample_n(who, 10)
+sample_n(who, 10) #You can use a set.seed() for replication
 ```
 
 In this data set, each row (each observation) is a country-year.  Each column is a measure-age value.  
